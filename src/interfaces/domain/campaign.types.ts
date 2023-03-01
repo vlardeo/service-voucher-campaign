@@ -13,3 +13,11 @@ export type Campaign = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type CreateCampaignDto = {
+  prefix: string;
+  fromDate: string;
+  toDate: string;
+  amount: number;
+  currency: CampaignCurrency;
+};
