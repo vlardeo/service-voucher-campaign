@@ -1,7 +1,8 @@
 import type { QueryResult } from 'pg';
 import pool from '../drivers/postgresql';
 import type { Campaign, CreateCampaignDto } from '../interfaces/domain/campaign.types';
-import type { SqlCampaignRepositoryPort } from '../interfaces/repositories/campaign-repository.port';
+import type { Page } from '../interfaces/common';
+import type { ListCampaignsQuery, SqlCampaignRepositoryPort } from '../interfaces/repositories/campaign-repository.port';
 import { objectKeysFromSnakeCaseToCamelCase } from '../utils/case-convert';
 
 const pgCampaignRepository: SqlCampaignRepositoryPort = {
@@ -36,10 +37,30 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
     const response = (await pool.query(queryText, queryValues)) as QueryResult<Campaign>;
 
     if (response.rows.length) {
-      return response.rows[0];
+      return objectKeysFromSnakeCaseToCamelCase(response.rows[0]) as Campaign;
     }
 
     return null;
+  },
+
+  async list(query: ListCampaignsQuery = {}): Promise<Page<Campaign>> {
+    const { page = 0, pageSize = 50 } = query;
+
+    const queryText = `
+      SELECT
+        *
+      FROM
+        campaigns
+      LIMIT $1 OFFSET $2
+    `;
+    const queryValues = [pageSize, page];
+
+    const response = (await pool.query(queryText, queryValues)) as QueryResult<Campaign>;
+
+    return {
+      results: response.rows.map((row) => objectKeysFromSnakeCaseToCamelCase(row) as Campaign),
+      total: response.rows.length,
+    };
   },
 };
 
