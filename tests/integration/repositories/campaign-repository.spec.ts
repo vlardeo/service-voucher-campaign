@@ -2,6 +2,8 @@ import pool from '../../../src/drivers/postgresql';
 import flush from '../../../src/utils/flush';
 import { CampaignCurrency, CreateCampaignDto } from '../../../src/interfaces/domain/campaign.types';
 import pgCampaignRepository from '../../../src/repositories/campaign.repository';
+import { generateUuid } from '../../../src/utils/uuid';
+import { aCampaign } from '../../builders/campaign.builder';
 
 describe('@repositories/pg-campaign-repository', () => {
   afterEach(async () => {
@@ -27,6 +29,28 @@ describe('@repositories/pg-campaign-repository', () => {
           currency: CAMPAIGN_DTO.currency,
         }),
       );
+    });
+  });
+
+  describe('findById()', () => {
+    describe('when there is no entity', () => {
+      it('returns null', async () => {
+        const [CAMPAIGN_ID_1, CAMPAIGN_ID_2] = [generateUuid(), generateUuid()];
+
+        await aCampaign({ id: CAMPAIGN_ID_1 }).build();
+
+        await expect(pgCampaignRepository.findById(CAMPAIGN_ID_2)).resolves.toBeNull();
+      });
+    });
+
+    describe('when there is entity', () => {
+      it('returns entity', async () => {
+        const CAMPAIGN_ID = generateUuid();
+
+        await aCampaign({ id: CAMPAIGN_ID }).build();
+
+        await expect(pgCampaignRepository.findById(CAMPAIGN_ID)).resolves.toBeDefined();
+      });
     });
   });
 });

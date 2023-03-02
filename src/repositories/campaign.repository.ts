@@ -21,6 +21,26 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
 
     return objectKeysFromSnakeCaseToCamelCase(response.rows[0]) as Campaign;
   },
+
+  async findById(id: string): Promise<Campaign | null> {
+    const queryText = `
+      SELECT
+        *
+      FROM
+        campaigns
+      WHERE
+        id = $1
+    `;
+    const queryValues = [id];
+
+    const response = (await pool.query(queryText, queryValues)) as QueryResult<Campaign>;
+
+    if (response.rows.length) {
+      return response.rows[0];
+    }
+
+    return null;
+  },
 };
 
 export default pgCampaignRepository;

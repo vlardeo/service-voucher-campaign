@@ -3,6 +3,7 @@ import type { SqlCampaignRepositoryPort } from '../../src/interfaces/repositorie
 
 const aCampaignRepository: SqlCampaignRepositoryPort = {
   create: jest.fn(async () => ({} as Promise<Campaign>)),
+  findById: jest.fn(async () => ({} as Promise<Campaign>)),
 };
 
 export default aCampaignRepository;
