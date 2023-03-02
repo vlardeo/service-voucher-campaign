@@ -83,4 +83,19 @@ describe('@controllers/campaign-controller', () => {
       });
     });
   });
+
+  describe('list()', () => {
+    it('should send response with array of results, total count header and status code 200', async () => {
+      const campaigns = [aCampaign({}).buildMock(), aCampaign({}).buildMock()];
+      (aCampaignService.list as jest.Mock).mockResolvedValueOnce({
+        results: campaigns,
+        total: 2,
+      });
+
+      await campaignController.list(req, mockResponse, mockNext);
+      expect(mockResponse.set).toHaveBeenCalledWith('X-Total-Count', '2');
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    });
+  });
 });

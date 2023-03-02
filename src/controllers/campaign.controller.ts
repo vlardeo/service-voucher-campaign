@@ -27,6 +27,16 @@ const campaignController = {
       next(err);
     }
   },
+
+  list: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { total, results } = await campaignService.list(req.query);
+
+      res.set('X-Total-Count', String(total)).status(200).json(results);
+    } catch (err: any) {
+      next(err);
+    }
+  },
 };
 
 export default campaignController;
