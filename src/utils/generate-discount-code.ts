@@ -10,3 +10,14 @@ export function generateDiscountCode(prefix: string, length = DEFAULT_CODE_SIZE)
 
   return result;
 }
+
+export function generateSetOfUniqDiscountCodes(amount: number, prefix: string, existingCodes: Set<string> = new Set()): Set<string> {
+  const uniqDiscountCodes = existingCodes.size ? new Set([...existingCodes]) : existingCodes;
+
+  while (uniqDiscountCodes.size < amount) {
+    const newCode = generateDiscountCode(prefix);
+    uniqDiscountCodes.add(newCode);
+  }
+
+  return uniqDiscountCodes;
+}
