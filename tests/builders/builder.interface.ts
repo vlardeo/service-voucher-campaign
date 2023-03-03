@@ -1,5 +1,5 @@
-export interface BuilderInterface<MODEL_TYPE> {
+export interface BuilderInterface<Model> {
   readonly data: any;
 
-  build(): Promise<MODEL_TYPE>;
+  build(): Promise<Model>;
 }

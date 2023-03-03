@@ -1,7 +1,7 @@
 import type { QueryResult } from 'pg';
 import pool from '../drivers/postgresql';
 import type { Campaign, CreateCampaignDto } from '../interfaces/domain/campaign.types';
-import type { Page } from '../interfaces/common';
+import type { Page, SqlCount } from '../interfaces/common';
 import type { ListCampaignsQuery, SqlCampaignRepositoryPort } from '../interfaces/repositories/campaign-repository.port';
 import { objectKeysFromSnakeCaseToCamelCase } from '../utils/case-convert';
 
@@ -46,7 +46,7 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
   async list(query: ListCampaignsQuery = {}): Promise<Page<Campaign>> {
     const { page = 0, pageSize = 50 } = query;
 
-    const queryText = `
+    const queryTextList = `
       SELECT
         *
       FROM
@@ -54,13 +54,33 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
       LIMIT $1 OFFSET $2
     `;
     const queryValues = [pageSize, page];
+    const queryTextCount = `
+      SELECT
+        COUNT(*)
+      FROM
+        campaigns
+      `;
 
-    const response = (await pool.query(queryText, queryValues)) as QueryResult<Campaign>;
+    const client = await pool.connect();
 
-    return {
-      results: response.rows.map((row) => objectKeysFromSnakeCaseToCamelCase(row) as Campaign),
-      total: response.rows.length,
-    };
+    try {
+      await client.query('BEGIN');
+
+      const response = (await client.query(queryTextList, queryValues)) as QueryResult<Campaign>;
+      const count = (await client.query(queryTextCount)) as QueryResult<SqlCount>;
+
+      await client.query('COMMIT');
+
+      return {
+        results: response.rows.map((row) => objectKeysFromSnakeCaseToCamelCase(row) as Campaign),
+        total: +count.rows[0].count,
+      };
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
   },
 };
 

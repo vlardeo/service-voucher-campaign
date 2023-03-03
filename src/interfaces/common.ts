@@ -3,7 +3,11 @@ export type OffsetPagination = {
   pageSize: number;
 };
 
-export interface Page<TEntity> {
-  results: TEntity[];
+export type Page<Entity> = {
+  results: Entity[];
   total: number;
-}
+};
+
+export type SqlCount = {
+  count: number;
+};

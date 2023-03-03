@@ -56,7 +56,7 @@ describe('@repositories/pg-campaign-repository', () => {
 
   describe('list()', () => {
     describe('when there are no entities', () => {
-      it('returns an empty array as result and 0 as total', async () => {
+      it('returns an empty array as result and 0 as total count', async () => {
         await expect(pgCampaignRepository.list()).resolves.toEqual({
           results: [],
           total: 0,
@@ -92,7 +92,7 @@ describe('@repositories/pg-campaign-repository', () => {
 
             await expect(pgCampaignRepository.list({ page: 3, pageSize: 1 })).resolves.toEqual({
               results: expect.arrayContaining([campaign]),
-              total: 1,
+              total: 5,
             });
           });
         });
