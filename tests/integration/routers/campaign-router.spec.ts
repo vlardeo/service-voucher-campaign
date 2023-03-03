@@ -4,6 +4,7 @@ import request from 'supertest';
 import server from '../../../src/server';
 import { CampaignCurrency } from '../../../src/interfaces/domain/campaign.types';
 import pgCampaignRepository from '../../../src/repositories/campaign.repository';
+import { aCampaign } from '../../builders/campaign.builder';
 
 describe('@routers/campaign-router', () => {
   afterEach(async () => {
@@ -84,6 +85,53 @@ describe('@routers/campaign-router', () => {
         );
 
         await expect(pgCampaignRepository.findById(body.id)).resolves.toBeDefined();
+      });
+    });
+  });
+
+  describe('GET /campaigns', () => {
+    describe('when payload is not valid', () => {
+      it('should return status code 400', async () => {
+        // Page size should be above 0
+        const QUERY = {
+          pageSize: 0,
+        };
+
+        const response = await request(server).get('/campaigns').query(QUERY);
+
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('when payload schema is valid', () => {
+      it('should list entities, return total count header and status code 200', async () => {
+        const allCampaigns = await Promise.all([aCampaign({}).build(), aCampaign({}).build()]);
+
+        const { status, body, headers } = await request(server).get('/campaigns');
+
+        expect(headers['x-total-count']).toBe('2');
+        expect(status).toBe(200);
+        expect(body).toEqual(
+          expect.arrayContaining([expect.objectContaining({ id: allCampaigns[0].id }), expect.objectContaining({ id: allCampaigns[1].id })]),
+        );
+      });
+
+      describe('when query passed', () => {
+        it('should paginate and return list entities, total count header and status code 200', async () => {
+          const QUERY = {
+            pageSize: 1,
+            page: 1,
+          };
+
+          await aCampaign({}).build();
+          const campaign = await aCampaign({}).build();
+
+          const { status, body, headers } = await request(server).get('/campaigns').query(QUERY);
+
+          expect(headers['x-total-count']).toBe('2');
+          expect(status).toBe(200);
+          expect(body).toEqual(expect.arrayContaining([expect.objectContaining({ id: campaign.id })]));
+        });
       });
     });
   });

@@ -47,9 +47,55 @@ describe('@repositories/pg-campaign-repository', () => {
       it('returns entity', async () => {
         const CAMPAIGN_ID = generateUuid();
 
-        await aCampaign({ id: CAMPAIGN_ID }).build();
+        const campaign = await aCampaign({ id: CAMPAIGN_ID }).build();
 
-        await expect(pgCampaignRepository.findById(CAMPAIGN_ID)).resolves.toBeDefined();
+        await expect(pgCampaignRepository.findById(CAMPAIGN_ID)).resolves.toEqual(expect.objectContaining(campaign));
+      });
+    });
+  });
+
+  describe('list()', () => {
+    describe('when there are no entities', () => {
+      it('returns an empty array as result and 0 as total count', async () => {
+        await expect(pgCampaignRepository.list()).resolves.toEqual({
+          results: [],
+          total: 0,
+        });
+      });
+    });
+
+    describe('when there are entities', () => {
+      describe('when called without query parameters', () => {
+        it('returns array of results and total count', async () => {
+          const allCampaigns = await Promise.all([
+            aCampaign({}).build(),
+            aCampaign({}).build(),
+            aCampaign({}).build(),
+            aCampaign({}).build(),
+            aCampaign({}).build(),
+          ]);
+          await expect(pgCampaignRepository.list()).resolves.toEqual({
+            results: expect.arrayContaining(allCampaigns),
+            total: 5,
+          });
+        });
+      });
+
+      describe('when called with query parameters', () => {
+        describe('when called with pagination params', () => {
+          it('should paginate and returns array of results and total count', async () => {
+            await aCampaign({}).build();
+            await aCampaign({}).build();
+            await aCampaign({}).build();
+            const campaign = await aCampaign({}).build();
+            await aCampaign({}).build();
+
+            await expect(pgCampaignRepository.list({ page: 3, pageSize: 1 })).resolves.toEqual({
+              results: expect.arrayContaining([campaign]),
+              total: 5,
+            });
+          });
+        });
       });
     });
   });

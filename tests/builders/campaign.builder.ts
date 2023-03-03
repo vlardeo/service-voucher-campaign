@@ -3,6 +3,7 @@ import type { BuilderInterface } from './builder.interface';
 import pool from '../../src/drivers/postgresql';
 import type { QueryResult } from 'pg';
 import { generateUuid } from '../../src/utils/uuid';
+import { objectKeysFromSnakeCaseToCamelCase } from '../../src/utils/case-convert';
 
 interface CampaignBuilderInterface {
   id: string;
@@ -54,7 +55,7 @@ export class CampaignBuilder implements BuilderInterface<Campaign> {
     `;
     const response = (await pool.query(queryText, Object.values(this.data))) as QueryResult<Campaign>;
 
-    return response.rows[0];
+    return objectKeysFromSnakeCaseToCamelCase(response.rows[0]) as Campaign;
   }
 
   public buildMock() {

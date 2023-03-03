@@ -13,4 +13,13 @@ const CreateCampaignSchema = z.object({
     .strict(),
 });
 
-export { CreateCampaignSchema };
+const ListCampaignSchema = z.object({
+  query: z
+    .object({
+      page: z.coerce.number().min(0).optional(),
+      pageSize: z.coerce.number().min(1).max(500).optional(),
+    })
+    .strict(),
+});
+
+export { CreateCampaignSchema, ListCampaignSchema };

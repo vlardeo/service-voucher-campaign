@@ -23,4 +23,19 @@ describe('@services/campaign-service', () => {
       expect(result).toEqual(campaign);
     });
   });
+
+  describe('list()', () => {
+    it('lists campaigns and total count', async () => {
+      const campaigns = [aCampaign({}).buildMock(), aCampaign({}).buildMock()];
+      (aCampaignRepository.list as jest.Mock).mockResolvedValueOnce({
+        results: campaigns,
+        total: 2,
+      });
+      const result = await campaignService.list();
+      expect(result).toEqual({
+        results: expect.arrayContaining(campaigns),
+        total: 2,
+      });
+    });
+  });
 });
