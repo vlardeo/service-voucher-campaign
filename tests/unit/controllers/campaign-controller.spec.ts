@@ -10,7 +10,7 @@ describe('@controllers/campaign-controller', () => {
   let req: Request;
 
   beforeEach(() => {
-    req = {} as Request;
+    req = { query: {}, body: {}, params: {} } as Request;
   });
 
   afterEach(() => {
@@ -24,15 +24,13 @@ describe('@controllers/campaign-controller', () => {
         const FROM_DATE = new Date('2023').toISOString();
         const TO_DATE = new Date('2022').toISOString();
 
-        req = {
-          body: {
-            prefix: campaign.prefix,
-            fromDate: FROM_DATE,
-            toDate: TO_DATE,
-            amount: campaign.amount,
-            currency: campaign.currency,
-          },
-        } as Request;
+        req.body = {
+          prefix: campaign.prefix,
+          fromDate: FROM_DATE,
+          toDate: TO_DATE,
+          amount: campaign.amount,
+          currency: campaign.currency,
+        };
 
         await campaignController.create(req, mockResponse, mockNext);
         expect(mockResponse.status).toHaveBeenCalledWith(400);
@@ -45,15 +43,13 @@ describe('@controllers/campaign-controller', () => {
         const campaign = aCampaign({}).buildMock();
         const DATE = new Date('2023').toISOString();
 
-        req = {
-          body: {
-            prefix: campaign.prefix,
-            fromDate: DATE,
-            toDate: DATE,
-            amount: campaign.amount,
-            currency: campaign.currency,
-          },
-        } as Request;
+        req.body = {
+          prefix: campaign.prefix,
+          fromDate: DATE,
+          toDate: DATE,
+          amount: campaign.amount,
+          currency: campaign.currency,
+        };
 
         await campaignController.create(req, mockResponse, mockNext);
         expect(mockResponse.status).toHaveBeenCalledWith(400);
@@ -66,15 +62,13 @@ describe('@controllers/campaign-controller', () => {
         const campaign = aCampaign({}).buildMock();
         (aCampaignService.create as jest.Mock).mockResolvedValueOnce(campaign);
 
-        req = {
-          body: {
-            prefix: campaign.prefix,
-            fromDate: campaign.fromDate,
-            toDate: campaign.toDate,
-            amount: campaign.amount,
-            currency: campaign.currency,
-          },
-        } as Request;
+        req.body = {
+          prefix: campaign.prefix,
+          fromDate: campaign.fromDate,
+          toDate: campaign.toDate,
+          amount: campaign.amount,
+          currency: campaign.currency,
+        };
 
         await campaignController.create(req, mockResponse, mockNext);
         expect(mockResponse.status).toHaveBeenCalledWith(201);

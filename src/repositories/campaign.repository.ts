@@ -52,9 +52,10 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
         *
       FROM
         campaigns
+      ORDER BY created_at ASC
       LIMIT $1 OFFSET $2
     `;
-    const queryValues = [pageSize, page];
+    const queryValues = [pageSize, page * pageSize];
     const queryTextCount = `
       SELECT
         COUNT(*)

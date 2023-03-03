@@ -86,12 +86,12 @@ describe('@repositories/pg-campaign-repository', () => {
           it('should paginate and returns array of results and total count', async () => {
             await aCampaign({}).build();
             await aCampaign({}).build();
-            await aCampaign({}).build();
-            const campaign = await aCampaign({}).build();
+            const campaign1 = await aCampaign({}).build();
+            const campaign2 = await aCampaign({}).build();
             await aCampaign({}).build();
 
-            await expect(pgCampaignRepository.list({ page: 3, pageSize: 1 })).resolves.toEqual({
-              results: expect.arrayContaining([campaign]),
+            await expect(pgCampaignRepository.list({ page: 1, pageSize: 2 })).resolves.toEqual({
+              results: expect.arrayContaining([campaign1, campaign2]),
               total: 5,
             });
           });

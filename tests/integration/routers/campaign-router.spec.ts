@@ -119,18 +119,22 @@ describe('@routers/campaign-router', () => {
       describe('when query passed', () => {
         it('should paginate and return list entities, total count header and status code 200', async () => {
           const QUERY = {
-            pageSize: 1,
+            pageSize: 2,
             page: 1,
           };
 
           await aCampaign({}).build();
-          const campaign = await aCampaign({}).build();
+          await aCampaign({}).build();
+          const campaign1 = await aCampaign({}).build();
+          const campaign2 = await aCampaign({}).build();
 
           const { status, body, headers } = await request(server).get('/campaigns').query(QUERY);
 
-          expect(headers['x-total-count']).toBe('2');
+          expect(headers['x-total-count']).toBe('4');
           expect(status).toBe(200);
-          expect(body).toEqual(expect.arrayContaining([expect.objectContaining({ id: campaign.id })]));
+          expect(body).toEqual(
+            expect.arrayContaining([expect.objectContaining({ id: campaign1.id }), expect.objectContaining({ id: campaign2.id })]),
+          );
         });
       });
     });
