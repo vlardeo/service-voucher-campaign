@@ -1,5 +1,5 @@
 import pool from '../../../src/drivers/postgresql';
-import flush from '../../../src/utils/flush';
+import flush from '../../flush';
 import { CampaignCurrency, CreateCampaignDto } from '../../../src/interfaces/domain/campaign.types';
 import pgCampaignRepository from '../../../src/repositories/campaign.repository';
 import { generateUuid } from '../../../src/utils/uuid';

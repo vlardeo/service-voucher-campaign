@@ -1,9 +1,8 @@
 import { Campaign, CampaignCurrency } from '../../src/interfaces/domain/campaign.types';
 import type { BuilderInterface } from './builder.interface';
 import pool from '../../src/drivers/postgresql';
-import type { QueryResult } from 'pg';
 import { generateUuid } from '../../src/utils/uuid';
-import { objectKeysFromSnakeCaseToCamelCase } from '../../src/utils/case-convert';
+import { objectKeysToCamelCase } from '../../src/utils/case-convert';
 
 interface CampaignBuilderInterface {
   id: string;
@@ -53,9 +52,9 @@ export class CampaignBuilder implements BuilderInterface<Campaign> {
       currency
     ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
     `;
-    const response = (await pool.query(queryText, Object.values(this.data))) as QueryResult<Campaign>;
+    const response = await pool.query<Campaign>(queryText, Object.values(this.data));
 
-    return objectKeysFromSnakeCaseToCamelCase(response.rows[0]) as Campaign;
+    return objectKeysToCamelCase(response.rows[0]) as Campaign;
   }
 
   public buildMock() {

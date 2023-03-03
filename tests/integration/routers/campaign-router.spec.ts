@@ -1,5 +1,5 @@
 import pool from '../../../src/drivers/postgresql';
-import flush from '../../../src/utils/flush';
+import flush from '../../flush';
 import request from 'supertest';
 import server from '../../../src/server';
 import { CampaignCurrency } from '../../../src/interfaces/domain/campaign.types';

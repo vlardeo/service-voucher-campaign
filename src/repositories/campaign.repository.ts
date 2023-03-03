@@ -1,9 +1,8 @@
-import type { QueryResult } from 'pg';
 import pool from '../drivers/postgresql';
 import type { Campaign, CreateCampaignDto } from '../interfaces/domain/campaign.types';
 import type { Page, SqlCount } from '../interfaces/common';
 import type { ListCampaignsQuery, SqlCampaignRepositoryPort } from '../interfaces/repositories/campaign-repository.port';
-import { objectKeysFromSnakeCaseToCamelCase } from '../utils/case-convert';
+import { objectKeysToCamelCase } from '../utils/case-convert';
 
 const pgCampaignRepository: SqlCampaignRepositoryPort = {
   create: async (input: CreateCampaignDto): Promise<Campaign> => {
@@ -16,11 +15,13 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
         currency
       ) VALUES ($1, $2, $3, $4, $5) RETURNING *
     `;
-    const queryValues = Object.values(input);
+    // Assure that pass values in the query in correct order
+    const { prefix, fromDate, toDate, amount, currency } = input;
+    const queryValues = [prefix, fromDate, toDate, amount, currency];
 
-    const response = (await pool.query(queryText, queryValues)) as QueryResult<Campaign>;
+    const response = await pool.query<Campaign>(queryText, queryValues);
 
-    return objectKeysFromSnakeCaseToCamelCase(response.rows[0]) as Campaign;
+    return objectKeysToCamelCase(response.rows[0]) as Campaign;
   },
 
   async findById(id: string): Promise<Campaign | null> {
@@ -34,10 +35,10 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
     `;
     const queryValues = [id];
 
-    const response = (await pool.query(queryText, queryValues)) as QueryResult<Campaign>;
+    const response = await pool.query<Campaign>(queryText, queryValues);
 
     if (response.rows.length) {
-      return objectKeysFromSnakeCaseToCamelCase(response.rows[0]) as Campaign;
+      return objectKeysToCamelCase(response.rows[0]) as Campaign;
     }
 
     return null;
@@ -66,13 +67,13 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
     try {
       await client.query('BEGIN');
 
-      const response = (await client.query(queryTextList, queryValues)) as QueryResult<Campaign>;
-      const count = (await client.query(queryTextCount)) as QueryResult<SqlCount>;
+      const response = await client.query<Campaign>(queryTextList, queryValues);
+      const count = await client.query<SqlCount>(queryTextCount);
 
       await client.query('COMMIT');
 
       return {
-        results: response.rows.map((row) => objectKeysFromSnakeCaseToCamelCase(row) as Campaign),
+        results: response.rows.map((row) => objectKeysToCamelCase(row) as Campaign),
         total: +count.rows[0].count,
       };
     } catch (e) {
