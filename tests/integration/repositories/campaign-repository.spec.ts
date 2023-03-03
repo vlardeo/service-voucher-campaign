@@ -1,9 +1,9 @@
-import pool from '../../../src/drivers/postgresql';
-import flush from '../../../src/utils/flush';
-import { CampaignCurrency, CreateCampaignDto } from '../../../src/interfaces/domain/campaign.types';
-import pgCampaignRepository from '../../../src/repositories/campaign.repository';
-import { generateUuid } from '../../../src/utils/uuid';
-import { aCampaign } from '../../builders/campaign.builder';
+import pool from '@/drivers/postgresql';
+import flush from '@tests/flush';
+import { CampaignCurrency, CreateCampaignDto } from '@/interfaces/domain/campaign.types';
+import pgCampaignRepository from '@/repositories/campaign.repository';
+import { generateUuid } from '@/utils/uuid';
+import { aCampaign } from '@tests/builders/campaign.builder';
 
 describe('@repositories/pg-campaign-repository', () => {
   afterEach(async () => {

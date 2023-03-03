@@ -1,10 +1,10 @@
-import aCampaignService from '../../mocks/campaign.service';
-jest.mock('../../../src/services/campaign.service', () => aCampaignService);
+import aCampaignService from '@tests/mocks/campaign.service';
+jest.mock('@/services/campaign.service', () => aCampaignService);
 
 import type { Request } from 'express';
-import campaignController from '../../../src/controllers/campaign.controller';
-import { aCampaign } from '../../builders/campaign.builder';
-import { mockNext, mockResponse } from '../../mocks/express-api';
+import campaignController from '@/controllers/campaign.controller';
+import { aCampaign } from '@tests/builders/campaign.builder';
+import { mockNext, mockResponse } from '@tests/mocks/express-api';
 
 describe('@controllers/campaign-controller', () => {
   let req: Request;

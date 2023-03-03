@@ -1,5 +1,6 @@
-import server from './server';
-import env from './env';
+import 'module-alias/register';
+import server from '@/server';
+import env from '@env';
 
 const port = Number(env.SERVER_PORT) || 3000;
 

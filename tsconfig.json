@@ -11,5 +11,11 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@env": ["src/env"],
+      "@tests/*": ["tests/*"],
+    }
   }
 }
