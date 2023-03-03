@@ -1,5 +1,5 @@
 import z from 'zod';
-import { CampaignCurrency } from '../interfaces/domain/campaign.types';
+import { CampaignCurrency } from '@/interfaces/domain/campaign.types';
 
 const CreateCampaignSchema = z.object({
   body: z

@@ -1,8 +1,8 @@
-import { Campaign, CampaignCurrency } from '../../src/interfaces/domain/campaign.types';
-import type { BuilderInterface } from './builder.interface';
-import pool from '../../src/drivers/postgresql';
-import { generateUuid } from '../../src/utils/uuid';
-import { objectKeysToCamelCase } from '../../src/utils/case-convert';
+import { Campaign, CampaignCurrency } from '@/interfaces/domain/campaign.types';
+import type { BuilderInterface } from '@tests/builders/builder.interface';
+import pool from '@/drivers/postgresql';
+import { generateUuid } from '@/utils/uuid';
+import { objectKeysToCamelCase } from '@/utils/case-convert';
 
 interface CampaignBuilderInterface {
   id: string;

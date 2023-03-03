@@ -1,10 +1,10 @@
-import pool from '../../../src/drivers/postgresql';
-import flush from '../../flush';
+import pool from '@/drivers/postgresql';
+import flush from '@tests/flush';
 import request from 'supertest';
-import server from '../../../src/server';
-import { CampaignCurrency } from '../../../src/interfaces/domain/campaign.types';
-import pgCampaignRepository from '../../../src/repositories/campaign.repository';
-import { aCampaign } from '../../builders/campaign.builder';
+import server from '@/server';
+import { CampaignCurrency } from '@/interfaces/domain/campaign.types';
+import pgCampaignRepository from '@/repositories/campaign.repository';
+import { aCampaign } from '@tests/builders/campaign.builder';
 
 describe('@routers/campaign-router', () => {
   afterEach(async () => {

@@ -5,4 +5,9 @@ module.exports = {
   coveragePathIgnorePatterns: ['./test'],
   globalSetup: '<rootDir>/tests/setup.ts',
   setupFilesAfterEnv: ['<rootDir>/tests/setup-after-env.ts'],
+  moduleNameMapper: {
+    '@/(.*)': '<rootDir>/src/$1',
+    '@env': '<rootDir>/src/env',
+    '@tests/(.*)': '<rootDir>/tests/$1',
+  },
 };

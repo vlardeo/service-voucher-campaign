@@ -1,8 +1,8 @@
-import aCampaignRepository from '../../mocks/campaign.repository';
-jest.mock('../../../src/repositories/campaign.repository', () => aCampaignRepository);
+import aCampaignRepository from '@tests/mocks/campaign.repository';
+jest.mock('@/repositories/campaign.repository', () => aCampaignRepository);
 
-import campaignService from '../../../src/services/campaign.service';
-import { aCampaign } from '../../builders/campaign.builder';
+import campaignService from '@/services/campaign.service';
+import { aCampaign } from '@tests/builders/campaign.builder';
 
 describe('@services/campaign-service', () => {
   afterEach(() => {

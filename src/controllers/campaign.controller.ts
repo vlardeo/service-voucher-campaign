@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
-import type { CreateCampaignDto } from '../interfaces/domain/campaign.types';
-import campaignService from '../services/campaign.service';
+import type { CreateCampaignDto } from '@/interfaces/domain/campaign.types';
+import campaignService from '@/services/campaign.service';
 
 const campaignController = {
   create: async (req: Request, res: Response, next: NextFunction) => {

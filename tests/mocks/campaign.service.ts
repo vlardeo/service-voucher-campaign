@@ -1,5 +1,5 @@
-import type { Page } from '../../src/interfaces/common';
-import type { Campaign } from '../../src/interfaces/domain/campaign.types';
+import type { Page } from '@/interfaces/common';
+import type { Campaign } from '@/interfaces/domain/campaign.types';
 
 const aCampaignService = {
   create: jest.fn(async () => ({} as Promise<Campaign>)),

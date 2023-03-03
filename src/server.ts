@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import campaignRouter from './routers/campaign.router';
+import campaignRouter from '@/routers/campaign.router';
 
 const server = express();
 
