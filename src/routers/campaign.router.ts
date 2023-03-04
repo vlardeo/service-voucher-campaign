@@ -1,14 +1,16 @@
 import express from 'express';
 import campaignController from '@/controllers/campaign.controller';
 import validate from '@/middlewares/schema-validator';
-import { CreateCampaignSchema, ListCampaignSchema } from '@/controllers/campaign-controller.schema';
+import { CreateCampaignSchema, ListCampaignSchema, BatchCreateVoucherSchema } from '@/controllers/campaign-controller.schema';
 
 export default function campaignRouter() {
   const router = express.Router();
 
-  router.post('/', validate(CreateCampaignSchema), campaignController.create);
+  router.get('/campaigns', validate(ListCampaignSchema), campaignController.list);
 
-  router.get('/', validate(ListCampaignSchema), campaignController.list);
+  router.post('/campaigns', validate(CreateCampaignSchema), campaignController.create);
+
+  router.post('/campaigns/:campaignId/vouchers/batch', validate(BatchCreateVoucherSchema), campaignController.voucherBatchCreate);
 
   return router;
 }
