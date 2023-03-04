@@ -1,4 +1,4 @@
-import type { Page } from '@/interfaces/common';
+import type { Page } from '@/common/types';
 import type { Voucher } from '@/interfaces/domain/voucher.types';
 import type { SqlVoucherRepositoryPort, CreateVoucherResponse } from '@/interfaces/repositories/voucher-repository.port';
 

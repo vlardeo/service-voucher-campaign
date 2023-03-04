@@ -1,6 +1,6 @@
 import pool from '@/drivers/postgresql';
 import type { Campaign, CreateCampaignDto } from '@/interfaces/domain/campaign.types';
-import type { Page, SqlCount } from '@/interfaces/common';
+import type { Page, SqlCount } from '@/common/types';
 import type { ListCampaignsQuery, SqlCampaignRepositoryPort } from '@/interfaces/repositories/campaign-repository.port';
 import { objectKeysToCamelCase } from '@/utils/case-convert';
 

@@ -1,5 +1,5 @@
 import type { Campaign, CreateCampaignDto } from '@/interfaces/domain/campaign.types';
-import type { OffsetPagination, Page } from '@/interfaces/common';
+import type { OffsetPagination, Page } from '@/common/types';
 
 export type ListCampaignsQuery = Partial<OffsetPagination>;
 

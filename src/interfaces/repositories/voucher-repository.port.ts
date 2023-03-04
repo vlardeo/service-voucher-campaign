@@ -1,4 +1,4 @@
-import type { OffsetPagination, Page } from '@/interfaces/common';
+import type { OffsetPagination, Page } from '@/common/types';
 import type { Voucher } from '@/interfaces/domain/voucher.types';
 
 export type BatchCreateVoucherProps = {

@@ -1,5 +1,5 @@
 import pool from '@/drivers/postgresql';
-import type { Page, SqlCount } from '@/interfaces/common';
+import type { Page, SqlCount } from '@/common/types';
 import type { Voucher } from '@/interfaces/domain/voucher.types';
 import type {
   BatchCreateVoucherProps,
