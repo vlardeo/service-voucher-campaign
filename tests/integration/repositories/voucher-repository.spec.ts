@@ -10,17 +10,24 @@ describe('@repositories/pg-voucher-repository', () => {
     await flush(pool);
   });
 
-  describe('list()', () => {
-    describe('when there are no entities', () => {
+  describe('listVouchersPerCampaign()', () => {
+    describe('when there are no vouchers in campaign', () => {
       it('returns an empty array as result and 0 as total count', async () => {
-        await expect(pgVoucherRepository.list()).resolves.toEqual({
+        // First campaign with vouchers
+        const campaign1 = await aCampaign({}).build();
+        await Promise.all([aVoucher({ campaignId: campaign1.id }).build(), aVoucher({ campaignId: campaign1.id }).build()]);
+
+        // Second campaign without vouchers
+        const campaign2 = await aCampaign({}).build();
+
+        await expect(pgVoucherRepository.listVouchersPerCampaign({ campaignId: campaign2.id })).resolves.toEqual({
           results: [],
           total: 0,
         });
       });
     });
 
-    describe('when there are entities', () => {
+    describe('when there are vouchers in campaign', () => {
       describe('when called without query parameters', () => {
         it('returns array of results and total count', async () => {
           const campaign = await aCampaign({}).build();
@@ -32,7 +39,7 @@ describe('@repositories/pg-voucher-repository', () => {
             aVoucher({ campaignId: campaign.id }).build(),
           ]);
 
-          await expect(pgVoucherRepository.list()).resolves.toEqual({
+          await expect(pgVoucherRepository.listVouchersPerCampaign({ campaignId: campaign.id })).resolves.toEqual({
             results: expect.arrayContaining(vouchers),
             total: 5,
           });
@@ -49,7 +56,7 @@ describe('@repositories/pg-voucher-repository', () => {
             const voucher1 = await aVoucher({ campaignId: campaign.id }).build();
             const voucher2 = await aVoucher({ campaignId: campaign.id }).build();
 
-            await expect(pgVoucherRepository.list({ page: 1, pageSize: 2 })).resolves.toEqual({
+            await expect(pgVoucherRepository.listVouchersPerCampaign({ campaignId: campaign.id, page: 1, pageSize: 2 })).resolves.toEqual({
               results: expect.arrayContaining([voucher1, voucher2]),
               total: 4,
             });
@@ -71,7 +78,7 @@ describe('@repositories/pg-voucher-repository', () => {
       const { created } = await pgVoucherRepository.createBatch(BATCH_CREATE_INPUT);
       expect(created).toBe(3);
 
-      const { total } = await pgVoucherRepository.list();
+      const { total } = await pgVoucherRepository.listVouchersPerCampaign({ campaignId });
       expect(total).toBe(3);
     });
   });

@@ -168,7 +168,7 @@ describe('@routers/campaign-router', () => {
           expect(response.status).toBe(201);
           expect(response.body).toEqual({ created: 10 });
 
-          const { results: createdVouchers } = await pgVoucherRepository.list();
+          const { results: createdVouchers } = await pgVoucherRepository.listVouchersPerCampaign({ campaignId: campaign.id });
           expect(createdVouchers).toHaveLength(10);
           createdVouchers.map(({ campaignId }) => expect(campaignId).toEqual(campaign.id));
         });
