@@ -3,6 +3,8 @@ jest.mock('@/repositories/campaign.repository', () => aCampaignRepository);
 
 import campaignService from '@/services/campaign.service';
 import { aCampaign } from '@tests/builders/campaign.builder';
+import { generateUuid } from '@/utils/uuid';
+import { ResourceNotFoundError } from '@/common/errors';
 
 describe('@services/campaign-service', () => {
   afterEach(() => {
@@ -35,6 +37,28 @@ describe('@services/campaign-service', () => {
       expect(result).toEqual({
         results: expect.arrayContaining(campaigns),
         total: 2,
+      });
+    });
+  });
+
+  describe('delete()', () => {
+    describe('when there is no campaign', () => {
+      it('should throw ResourceNotFoundError', async () => {
+        const CAMPAIGN_ID = generateUuid();
+        (aCampaignRepository.findById as jest.Mock).mockResolvedValueOnce(null);
+        await expect(campaignService.delete(CAMPAIGN_ID)).rejects.toThrow(ResourceNotFoundError);
+      });
+    });
+
+    describe('when there is campaign', () => {
+      it('should call campaign repository to delete vouchers and campaign', async () => {
+        const campaign = aCampaign({}).buildMock();
+
+        (aCampaignRepository.findById as jest.Mock).mockResolvedValueOnce(campaign);
+        (aCampaignRepository.delete as jest.Mock).mockResolvedValueOnce({ deleted: 1 });
+
+        await expect(campaignService.delete(campaign.id)).resolves.toEqual({ deleted: 1 });
+        expect(aCampaignRepository.delete).toHaveBeenCalledWith(campaign.id);
       });
     });
   });
