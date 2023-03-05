@@ -1,7 +1,7 @@
 import pool from '@/drivers/postgresql';
 import type { Campaign, CreateCampaignDto } from '@/interfaces/domain/campaign.types';
 import type { Page, SqlCount } from '@/common/types';
-import type { ListCampaignsQuery, SqlCampaignRepositoryPort } from '@/interfaces/repositories/campaign-repository.port';
+import type { DeleteCampaignResponse, ListCampaignsQuery, SqlCampaignRepositoryPort } from '@/interfaces/repositories/campaign-repository.port';
 import { objectKeysToCamelCase } from '@/utils/case-convert';
 
 const pgCampaignRepository: SqlCampaignRepositoryPort = {
@@ -77,6 +77,40 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
         results: response.rows.map((row) => objectKeysToCamelCase(row) as Campaign),
         total: +count.rows[0].count,
       };
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
+  },
+
+  async delete(id: string): Promise<DeleteCampaignResponse> {
+    const queryTextDeleteVouchers = `
+      DELETE FROM
+        vouchers
+      WHERE
+        campaign_id = $1
+    `;
+    const queryTextDeleteCampaign = `
+      DELETE FROM
+        campaigns
+      WHERE
+        id = $1
+    `;
+    const queryValues = [id];
+
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      await client.query(queryTextDeleteVouchers, queryValues);
+      const responseDeleteCampaign = await client.query(queryTextDeleteCampaign, queryValues);
+
+      await client.query('COMMIT');
+
+      return { deleted: responseDeleteCampaign.rowCount };
     } catch (e) {
       await client.query('ROLLBACK');
       throw e;

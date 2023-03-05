@@ -6,6 +6,7 @@ import {
   ListCampaignSchema,
   BatchCreateVoucherSchema,
   ListVouchersPerCampaignSchema,
+  DeleteCampaignSchema,
 } from '@/controllers/campaign-controller.schema';
 
 export default function campaignRouter() {
@@ -18,6 +19,8 @@ export default function campaignRouter() {
   router.post('/campaigns', validate(CreateCampaignSchema), campaignController.create);
 
   router.post('/campaigns/:campaignId/vouchers/batch', validate(BatchCreateVoucherSchema), campaignController.voucherBatchCreate);
+
+  router.delete('/campaigns/:campaignId', validate(DeleteCampaignSchema), campaignController.delete);
 
   return router;
 }

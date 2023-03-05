@@ -5,7 +5,11 @@ import aVoucherService from '@tests/mocks/voucher.service';
 jest.mock('@/services/voucher.service', () => aVoucherService);
 
 import type { Request } from 'express';
-import campaignController, { VoucherBatchCreateRequest, VoucherListPerCampaignRequest } from '@/controllers/campaign.controller';
+import campaignController, {
+  CampaignDeleteRequest,
+  VoucherBatchCreateRequest,
+  VoucherListPerCampaignRequest,
+} from '@/controllers/campaign.controller';
 import { aCampaign } from '@tests/builders/campaign.builder';
 import { mockNext, mockResponse } from '@tests/mocks/express-api';
 import { generateUuid } from '@/utils/uuid';
@@ -140,7 +144,7 @@ describe('@controllers/campaign-controller', () => {
   });
 
   describe('listVouchersPerCampaign()', () => {
-    let req: Request;
+    let req: VoucherListPerCampaignRequest;
 
     beforeEach(() => {
       req = { query: {}, params: {} } as VoucherListPerCampaignRequest;
@@ -155,9 +159,27 @@ describe('@controllers/campaign-controller', () => {
       });
       req.params = { campaignId: campaign.id };
 
-      await campaignController.listVouchersPerCampaign(req as VoucherListPerCampaignRequest, mockResponse, mockNext);
+      await campaignController.listVouchersPerCampaign(req, mockResponse, mockNext);
 
       expect(mockResponse.set).toHaveBeenCalledWith('X-Total-Count', '2');
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('delete()', () => {
+    let req: CampaignDeleteRequest;
+
+    beforeEach(() => {
+      req = { params: {} } as CampaignDeleteRequest;
+    });
+
+    it('should send response with status code 200 and number of deleted campaign', async () => {
+      (aCampaignService.delete as jest.Mock).mockResolvedValueOnce({ deleted: 1 });
+      req.params = { campaignId: generateUuid() };
+
+      await campaignController.delete(req, mockResponse, mockNext);
+
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledTimes(1);
     });

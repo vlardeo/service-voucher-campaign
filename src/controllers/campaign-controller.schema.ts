@@ -50,4 +50,12 @@ const ListVouchersPerCampaignSchema = z.object({
     .strict(),
 });
 
-export { CreateCampaignSchema, ListCampaignSchema, BatchCreateVoucherSchema, ListVouchersPerCampaignSchema };
+const DeleteCampaignSchema = z.object({
+  params: z
+    .object({
+      campaignId: z.string().uuid(),
+    })
+    .strict(),
+});
+
+export { CreateCampaignSchema, ListCampaignSchema, BatchCreateVoucherSchema, ListVouchersPerCampaignSchema, DeleteCampaignSchema };

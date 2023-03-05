@@ -235,4 +235,23 @@ describe('@routers/campaign-router', () => {
       });
     });
   });
+
+  describe('DELETE /campaigns/:campaignId', () => {
+    it('should delete vouchers and campaign, return number of deleted and status code 200', async () => {
+      const campaign = await aCampaign({}).build();
+      await Promise.all([aVoucher({ campaignId: campaign.id }).build(), aVoucher({ campaignId: campaign.id }).build()]);
+
+      const { status, body } = await request(server).delete(`/campaigns/${campaign.id}`);
+
+      expect(status).toBe(200);
+      expect(body).toEqual({ deleted: 1 });
+
+      const campaignDb = await pgCampaignRepository.findById(campaign.id);
+      expect(campaignDb).toBe(null);
+
+      const { total, results } = await pgVoucherRepository.listVouchersPerCampaign({ campaignId: campaign.id });
+      expect(results).toHaveLength(0);
+      expect(total).toBe(0);
+    });
+  });
 });
