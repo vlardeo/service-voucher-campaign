@@ -8,11 +8,11 @@ export const MAX_VOUCHER_BATCH_CREATION_AMOUNT = 100;
 
 const voucherService = {
   createBatch: async (campaignId: string, amount: number) => {
-    const campaign = await pgCampaignRepository.findById(campaignId);
-
     if (amount > MAX_VOUCHER_BATCH_CREATION_AMOUNT) {
       throw new ValidationError(`Can't generate more than ${MAX_VOUCHER_BATCH_CREATION_AMOUNT} vouchers at a time`);
     }
+
+    const campaign = await pgCampaignRepository.findById(campaignId);
 
     if (!campaign) {
       throw new ResourceNotFoundError(`Voucher campaign`, campaignId);

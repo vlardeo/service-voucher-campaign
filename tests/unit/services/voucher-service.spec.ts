@@ -129,7 +129,7 @@ describe('@services/voucher-service', () => {
     });
 
     describe('when there is campaign', () => {
-      it('should throw ResourceNotFoundError', async () => {
+      it('should call repository to list vouchers per campaign and get total count', async () => {
         const campaign = aCampaign({}).buildMock();
         const vouchers = [aVoucher({ campaignId: campaign.id }).buildMock(), aVoucher({ campaignId: campaign.id }).buildMock()];
 
