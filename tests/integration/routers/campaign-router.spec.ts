@@ -144,7 +144,7 @@ describe('@routers/campaign-router', () => {
 
   describe('POST /campaigns/:campaignId/vouchers/batch', () => {
     describe('when payload schema is not valid', () => {
-      it.only('should return status code 400', async () => {
+      it('should return status code 400', async () => {
         const CAMPAIGN_ID = generateUuid();
         const response = await request(server).post(`/campaigns/${CAMPAIGN_ID}/vouchers/batch`).query({ amount: 'A' });
         expect(response.status).toBe(400);
