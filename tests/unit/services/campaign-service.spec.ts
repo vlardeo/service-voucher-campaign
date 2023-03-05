@@ -12,7 +12,7 @@ describe('@services/campaign-service', () => {
   });
 
   describe('create()', () => {
-    it('returns created campaign', async () => {
+    it('should call campaign repository to create campaign', async () => {
       const campaign = aCampaign({}).buildMock();
       (aCampaignRepository.create as jest.Mock).mockResolvedValueOnce(campaign);
       const result = await campaignService.create({
@@ -23,11 +23,18 @@ describe('@services/campaign-service', () => {
         currency: campaign.currency,
       });
       expect(result).toEqual(campaign);
+      expect(aCampaignRepository.create).toHaveBeenCalledWith({
+        prefix: campaign.prefix,
+        fromDate: campaign.fromDate.toISOString(),
+        toDate: campaign.toDate.toISOString(),
+        amount: campaign.amount,
+        currency: campaign.currency,
+      });
     });
   });
 
   describe('list()', () => {
-    it('lists campaigns and total count', async () => {
+    it('should call campaign repository to list campaigns', async () => {
       const campaigns = [aCampaign({}).buildMock(), aCampaign({}).buildMock()];
       (aCampaignRepository.list as jest.Mock).mockResolvedValueOnce({
         results: campaigns,
@@ -38,6 +45,7 @@ describe('@services/campaign-service', () => {
         results: expect.arrayContaining(campaigns),
         total: 2,
       });
+      expect(aCampaignRepository.list).toHaveBeenCalledWith(undefined);
     });
   });
 

@@ -67,13 +67,13 @@ const campaignController = {
 
   listVouchersPerCampaign: async (req: VoucherListPerCampaignRequest, res: Response, next: NextFunction) => {
     const { campaignId } = req.params;
-    const { page, pageSize } = req.query;
+    const { page = 0, pageSize = 50 } = req.query;
 
     try {
       const { total, results } = await voucherService.listVouchersPerCampaign({
         campaignId,
-        page: typeof page === 'string' ? +page : page,
-        pageSize: typeof pageSize === 'string' ? +pageSize : pageSize,
+        page: +page,
+        pageSize: +pageSize,
       });
 
       res.set('X-Total-Count', String(total)).status(200).json(results);
