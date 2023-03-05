@@ -118,4 +118,30 @@ describe('@services/voucher-service', () => {
       });
     });
   });
+
+  describe('listVouchersPerCampaign()', () => {
+    describe('when there is no campaign', () => {
+      it('should throw ResourceNotFoundError', async () => {
+        const CAMPAIGN_ID = generateUuid();
+        (aCampaignRepository.findById as jest.Mock).mockResolvedValueOnce(null);
+        await expect(voucherService.listVouchersPerCampaign({ campaignId: CAMPAIGN_ID })).rejects.toThrow(ResourceNotFoundError);
+      });
+    });
+
+    describe('when there is campaign', () => {
+      it('should throw ResourceNotFoundError', async () => {
+        const campaign = aCampaign({}).buildMock();
+        const vouchers = [aVoucher({ campaignId: campaign.id }).buildMock(), aVoucher({ campaignId: campaign.id }).buildMock()];
+
+        (aCampaignRepository.findById as jest.Mock).mockResolvedValueOnce(campaign);
+        (aVoucherRepository.listVouchersPerCampaign as jest.Mock).mockResolvedValueOnce({ total: 2, results: vouchers });
+
+        await expect(voucherService.listVouchersPerCampaign({ campaignId: campaign.id })).resolves.toEqual({
+          total: 2,
+          results: expect.arrayContaining(vouchers),
+        });
+        expect(aVoucherRepository.listVouchersPerCampaign).toHaveBeenCalledWith({ campaignId: campaign.id });
+      });
+    });
+  });
 });
