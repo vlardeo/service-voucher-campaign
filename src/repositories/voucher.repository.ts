@@ -85,7 +85,6 @@ const pgVoucherRepository: SqlVoucherRepositoryPort = {
   },
 
   async getDuplicates(campaignId: string, discountCode: string[]): Promise<Voucher[]> {
-    // Like '($1, $2, $3, ...)'
     const queryTextValuesTemplate: string[] = [];
 
     let paramsCounter = 1;
