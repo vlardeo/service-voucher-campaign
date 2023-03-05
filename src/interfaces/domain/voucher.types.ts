@@ -1,4 +1,4 @@
-export type Campaign = {
+export type Voucher = {
   id: string;
   campaignId: string;
   discountCode: string;

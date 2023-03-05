@@ -1,4 +1,4 @@
-import type { Page } from '@/interfaces/common';
+import type { Page } from '@/common/types';
 import type { Campaign } from '@/interfaces/domain/campaign.types';
 import type { SqlCampaignRepositoryPort } from '@/interfaces/repositories/campaign-repository.port';
 

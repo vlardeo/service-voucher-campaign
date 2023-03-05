@@ -10,6 +10,6 @@ server.use(express.urlencoded({ extended: true }));
 server.use(helmet());
 server.use(cors());
 
-server.use('/campaigns', campaignRouter());
+server.use('/', campaignRouter());
 
 export default server;

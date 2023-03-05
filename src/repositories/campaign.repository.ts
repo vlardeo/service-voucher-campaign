@@ -1,6 +1,6 @@
 import pool from '@/drivers/postgresql';
 import type { Campaign, CreateCampaignDto } from '@/interfaces/domain/campaign.types';
-import type { Page, SqlCount } from '@/interfaces/common';
+import type { Page, SqlCount } from '@/common/types';
 import type { ListCampaignsQuery, SqlCampaignRepositoryPort } from '@/interfaces/repositories/campaign-repository.port';
 import { objectKeysToCamelCase } from '@/utils/case-convert';
 
@@ -52,9 +52,10 @@ const pgCampaignRepository: SqlCampaignRepositoryPort = {
         *
       FROM
         campaigns
+      ORDER BY created_at ASC
       LIMIT $1 OFFSET $2
     `;
-    const queryValues = [pageSize, page];
+    const queryValues = [pageSize, page * pageSize];
     const queryTextCount = `
       SELECT
         COUNT(*)

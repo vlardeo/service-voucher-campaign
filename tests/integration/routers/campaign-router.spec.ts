@@ -5,6 +5,8 @@ import server from '@/server';
 import { CampaignCurrency } from '@/interfaces/domain/campaign.types';
 import pgCampaignRepository from '@/repositories/campaign.repository';
 import { aCampaign } from '@tests/builders/campaign.builder';
+import { generateUuid } from '@/utils/uuid';
+import pgVoucherRepository from '@/repositories/voucher.repository';
 
 describe('@routers/campaign-router', () => {
   afterEach(async () => {
@@ -119,18 +121,56 @@ describe('@routers/campaign-router', () => {
       describe('when query passed', () => {
         it('should paginate and return list entities, total count header and status code 200', async () => {
           const QUERY = {
-            pageSize: 1,
+            pageSize: 2,
             page: 1,
           };
 
           await aCampaign({}).build();
-          const campaign = await aCampaign({}).build();
+          await aCampaign({}).build();
+          const campaign1 = await aCampaign({}).build();
+          const campaign2 = await aCampaign({}).build();
 
           const { status, body, headers } = await request(server).get('/campaigns').query(QUERY);
 
-          expect(headers['x-total-count']).toBe('2');
+          expect(headers['x-total-count']).toBe('4');
           expect(status).toBe(200);
-          expect(body).toEqual(expect.arrayContaining([expect.objectContaining({ id: campaign.id })]));
+          expect(body).toEqual(
+            expect.arrayContaining([expect.objectContaining({ id: campaign1.id }), expect.objectContaining({ id: campaign2.id })]),
+          );
+        });
+      });
+    });
+  });
+
+  describe('POST /campaigns/:campaignId/vouchers/batch', () => {
+    describe('when payload schema is not valid', () => {
+      it.only('should return status code 400', async () => {
+        const CAMPAIGN_ID = generateUuid();
+        const response = await request(server).post(`/campaigns/${CAMPAIGN_ID}/vouchers/batch`).query({ amount: 'A' });
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('when payload schema is valid', () => {
+      describe('when campaign is not exist', () => {
+        it('should return status code 404', async () => {
+          const CAMPAIGN_ID = generateUuid();
+          const response = await request(server).post(`/campaigns/${CAMPAIGN_ID}/vouchers/batch`).query({ amount: 10 });
+          expect(response.status).toBe(404);
+        });
+      });
+
+      describe('when campaign is exist', () => {
+        it('should create vouchers and return number of create vouchers with status code 201', async () => {
+          const campaign = await aCampaign({}).build();
+
+          const response = await request(server).post(`/campaigns/${campaign.id}/vouchers/batch`).query({ amount: 10 });
+          expect(response.status).toBe(201);
+          expect(response.body).toEqual({ created: 10 });
+
+          const { results: createdVouchers } = await pgVoucherRepository.list();
+          expect(createdVouchers).toHaveLength(10);
+          createdVouchers.map(({ campaignId }) => expect(campaignId).toEqual(campaign.id));
         });
       });
     });
