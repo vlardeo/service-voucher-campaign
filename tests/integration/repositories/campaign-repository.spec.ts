@@ -4,6 +4,8 @@ import { CampaignCurrency, CreateCampaignDto } from '@/interfaces/domain/campaig
 import pgCampaignRepository from '@/repositories/campaign.repository';
 import { generateUuid } from '@/utils/uuid';
 import { aCampaign } from '@tests/builders/campaign.builder';
+import { aVoucher } from '@tests/builders/voucher.builder';
+import pgVoucherRepository from '@/repositories/voucher.repository';
 
 describe('@repositories/pg-campaign-repository', () => {
   afterEach(async () => {
@@ -97,6 +99,22 @@ describe('@repositories/pg-campaign-repository', () => {
           });
         });
       });
+    });
+  });
+
+  describe('delete()', () => {
+    it('should delete vouchers and campaign and return amount of deleted campaign', async () => {
+      const campaign = await aCampaign({}).build();
+      await Promise.all([aVoucher({ campaignId: campaign.id }).build(), aVoucher({ campaignId: campaign.id }).build()]);
+
+      await expect(pgCampaignRepository.delete(campaign.id)).resolves.toEqual({ deleted: 1 });
+
+      const campaignDb = await pgCampaignRepository.findById(campaign.id);
+      expect(campaignDb).toBe(null);
+
+      const { total, results } = await pgVoucherRepository.listVouchersPerCampaign({ campaignId: campaign.id });
+      expect(results).toHaveLength(0);
+      expect(total).toBe(0);
     });
   });
 });
