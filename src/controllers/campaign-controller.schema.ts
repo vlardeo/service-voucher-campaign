@@ -36,4 +36,18 @@ const BatchCreateVoucherSchema = z.object({
     .strict(),
 });
 
-export { CreateCampaignSchema, ListCampaignSchema, BatchCreateVoucherSchema };
+const ListVouchersPerCampaignSchema = z.object({
+  query: z
+    .object({
+      page: z.coerce.number().min(0).optional(),
+      pageSize: z.coerce.number().min(1).max(500).optional(),
+    })
+    .strict(),
+  params: z
+    .object({
+      campaignId: z.string().uuid(),
+    })
+    .strict(),
+});
+
+export { CreateCampaignSchema, ListCampaignSchema, BatchCreateVoucherSchema, ListVouchersPerCampaignSchema };

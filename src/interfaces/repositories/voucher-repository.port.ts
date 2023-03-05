@@ -8,10 +8,10 @@ export type BatchCreateVoucherProps = {
 
 export type CreateVoucherResponse = { created: number };
 
-export type ListVouchersQuery = Partial<OffsetPagination>;
+export type ListVouchersQuery = { campaignId: string } & Partial<OffsetPagination>;
 
 export interface SqlVoucherRepositoryPort {
-  list(query?: ListVouchersQuery): Promise<Page<Voucher>>;
+  listVouchersPerCampaign(query: ListVouchersQuery): Promise<Page<Voucher>>;
   createBatch(input: BatchCreateVoucherProps): Promise<CreateVoucherResponse>;
   getDuplicates(campaignId: string, discountCode: string[]): Promise<Voucher[]>;
 }

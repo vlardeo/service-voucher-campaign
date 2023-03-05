@@ -10,32 +10,38 @@ import type {
 import { objectKeysToCamelCase } from '@/utils/case-convert';
 
 const pgVoucherRepository: SqlVoucherRepositoryPort = {
-  async list(query: ListVouchersQuery = {}): Promise<Page<Voucher>> {
-    const { page = 0, pageSize = 50 } = query;
+  async listVouchersPerCampaign(query: ListVouchersQuery): Promise<Page<Voucher>> {
+    const { campaignId, page = 0, pageSize = 50 } = query;
 
     const queryTextList = `
       SELECT
         *
       FROM
         vouchers
-      ORDER BY created_at ASC
-      LIMIT $1 OFFSET $2
+      WHERE
+        campaign_id = $1
+      ORDER BY
+        created_at ASC
+      LIMIT $2 OFFSET $3
     `;
-    const queryValues = [pageSize, page * pageSize];
+    const queryValuesList = [campaignId, pageSize, page * pageSize];
     const queryTextCount = `
       SELECT
         COUNT(*)
       FROM
-      vouchers
+        vouchers
+      WHERE
+        campaign_id = $1
       `;
+    const queryValuesCount = [campaignId];
 
     const client = await pool.connect();
 
     try {
       await client.query('BEGIN');
 
-      const response = await client.query<Voucher>(queryTextList, queryValues);
-      const count = await client.query<SqlCount>(queryTextCount);
+      const response = await client.query<Voucher>(queryTextList, queryValuesList);
+      const count = await client.query<SqlCount>(queryTextCount, queryValuesCount);
 
       await client.query('COMMIT');
 

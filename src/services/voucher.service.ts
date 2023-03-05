@@ -1,4 +1,5 @@
 import { ResourceNotFoundError, ValidationError } from '@/common/errors';
+import type { ListVouchersQuery } from '@/interfaces/repositories/voucher-repository.port';
 import pgCampaignRepository from '@/repositories/campaign.repository';
 import pgVoucherRepository from '@/repositories/voucher.repository';
 import { generateSetOfUniqDiscountCodes } from '@/utils/generate-discount-code';
@@ -36,6 +37,18 @@ const voucherService = {
     const vouchersBatchCreatePayload = { campaignId, discountCodes: [...uniqDiscountCodes] };
 
     return pgVoucherRepository.createBatch(vouchersBatchCreatePayload);
+  },
+
+  listVouchersPerCampaign: async (input: ListVouchersQuery) => {
+    const { campaignId } = input;
+
+    const campaign = await pgCampaignRepository.findById(campaignId);
+
+    if (!campaign) {
+      throw new ResourceNotFoundError(`Voucher campaign`, campaignId);
+    }
+
+    return pgVoucherRepository.listVouchersPerCampaign(input);
   },
 };
 
