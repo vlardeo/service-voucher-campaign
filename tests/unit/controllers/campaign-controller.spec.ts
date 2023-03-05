@@ -5,10 +5,11 @@ import aVoucherService from '@tests/mocks/voucher.service';
 jest.mock('@/services/voucher.service', () => aVoucherService);
 
 import type { Request } from 'express';
-import campaignController, { VoucherBatchCreateRequest } from '@/controllers/campaign.controller';
+import campaignController, { VoucherBatchCreateRequest, VoucherListPerCampaignRequest } from '@/controllers/campaign.controller';
 import { aCampaign } from '@tests/builders/campaign.builder';
 import { mockNext, mockResponse } from '@tests/mocks/express-api';
 import { generateUuid } from '@/utils/uuid';
+import { aVoucher } from '@tests/builders/voucher.builder';
 
 describe('@controllers/campaign-controller', () => {
   afterEach(() => {
@@ -135,6 +136,30 @@ describe('@controllers/campaign-controller', () => {
         expect(mockResponse.json).toHaveBeenCalledTimes(1);
         expect(mockResponse.json).toHaveBeenCalledWith({ created: 10 });
       });
+    });
+  });
+
+  describe('listVouchersPerCampaign()', () => {
+    let req: Request;
+
+    beforeEach(() => {
+      req = { query: {}, params: {} } as VoucherListPerCampaignRequest;
+    });
+
+    it('should send response with array of results, total count header and status code 200', async () => {
+      const campaign = aCampaign({}).buildMock();
+      const vouchers = [aVoucher({ campaignId: campaign.id }).buildMock(), aVoucher({ campaignId: campaign.id }).buildMock()];
+      (aVoucherService.listVouchersPerCampaign as jest.Mock).mockResolvedValueOnce({
+        results: vouchers,
+        total: 2,
+      });
+      req.params = { campaignId: campaign.id };
+
+      await campaignController.listVouchersPerCampaign(req as VoucherListPerCampaignRequest, mockResponse, mockNext);
+
+      expect(mockResponse.set).toHaveBeenCalledWith('X-Total-Count', '2');
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledTimes(1);
     });
   });
 });
