@@ -5,6 +5,7 @@ import voucherService from '@/services/voucher.service';
 
 export type VoucherBatchCreateRequest = Request<{ campaignId: string }, null, null, { amount: string }>;
 export type VoucherListPerCampaignRequest = Request<{ campaignId: string }, null, null, { page?: string; pageSize?: string }>;
+export type CampaignDeleteRequest = Request<{ campaignId: string }, null, null, object>;
 
 const campaignController = {
   create: async (req: Request, res: Response, next: NextFunction) => {
@@ -76,6 +77,18 @@ const campaignController = {
       });
 
       res.set('X-Total-Count', String(total)).status(200).json(results);
+    } catch (err: any) {
+      next(err);
+    }
+  },
+
+  delete: async (req: CampaignDeleteRequest, res: Response, next: NextFunction) => {
+    const { campaignId } = req.params;
+
+    try {
+      const response = await campaignService.delete(campaignId);
+
+      res.status(200).json(response);
     } catch (err: any) {
       next(err);
     }
