@@ -7,6 +7,7 @@ import pgCampaignRepository from '@/repositories/campaign.repository';
 import { aCampaign } from '@tests/builders/campaign.builder';
 import { generateUuid } from '@/utils/uuid';
 import pgVoucherRepository from '@/repositories/voucher.repository';
+import { aVoucher } from '@tests/builders/voucher.builder';
 
 describe('@routers/campaign-router', () => {
   afterEach(async () => {
@@ -171,6 +172,65 @@ describe('@routers/campaign-router', () => {
           const { results: createdVouchers } = await pgVoucherRepository.listVouchersPerCampaign({ campaignId: campaign.id });
           expect(createdVouchers).toHaveLength(10);
           createdVouchers.map(({ campaignId }) => expect(campaignId).toEqual(campaign.id));
+        });
+      });
+    });
+  });
+
+  describe('GET /campaigns/:campaignId/vouchers', () => {
+    describe('when payload is not valid', () => {
+      it('should return status code 400', async () => {
+        // Page size should be above 0
+        const QUERY = {
+          pageSize: 0,
+        };
+
+        const response = await request(server).get(`/campaigns/${generateUuid()}/vouchers`).query(QUERY);
+
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('when payload schema is valid', () => {
+      it('should list entities, return total count header and status code 200', async () => {
+        const campaign1 = await aCampaign({}).build();
+        const campaign1Vouchers = await Promise.all([aVoucher({ campaignId: campaign1.id }).build(), aVoucher({ campaignId: campaign1.id }).build()]);
+
+        const campaign2 = await aCampaign({}).build();
+        await Promise.all([aVoucher({ campaignId: campaign2.id }).build(), aVoucher({ campaignId: campaign2.id }).build()]);
+
+        const { status, body, headers } = await request(server).get(`/campaigns/${campaign1.id}/vouchers`);
+
+        expect(headers['x-total-count']).toBe('2');
+        expect(status).toBe(200);
+        expect(body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ id: campaign1Vouchers[0].id }),
+            expect.objectContaining({ id: campaign1Vouchers[1].id }),
+          ]),
+        );
+      });
+
+      describe('when query passed', () => {
+        it('should paginate and return list entities, total count header and status code 200', async () => {
+          const QUERY = {
+            pageSize: 2,
+            page: 1,
+          };
+
+          const campaign = await aCampaign({}).build();
+
+          await aVoucher({ campaignId: campaign.id }).build();
+          await aVoucher({ campaignId: campaign.id }).build();
+          const voucher1 = await aVoucher({ campaignId: campaign.id }).build();
+          const voucher2 = await aVoucher({ campaignId: campaign.id }).build();
+          await aVoucher({ campaignId: campaign.id }).build();
+
+          const { status, body, headers } = await request(server).get(`/campaigns/${campaign.id}/vouchers`).query(QUERY);
+
+          expect(headers['x-total-count']).toBe('5');
+          expect(status).toBe(200);
+          expect(body).toEqual(expect.arrayContaining([expect.objectContaining({ id: voucher1.id }), expect.objectContaining({ id: voucher2.id })]));
         });
       });
     });
