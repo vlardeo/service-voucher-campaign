@@ -58,6 +58,19 @@ run: init ## Run application
 	node dist
 .PHONY: run
 
+run-docker: init-docker ## Run application
+	# Do not use Yarn/NPM to start the app
+	# https://lagoon.readthedocs.io/en/latest/using_lagoon/nodejs/graceful_shutdown/
+	npm run build
+	node dist
+.PHONY: run-docker
+
+init-docker: ## Initialize database
+	sleep 3 \
+	&& ./shmig -t postgresql -l $$POSTGRESQL_USER -p $$POSTGRESQL_PASSWORD -d $$POSTGRESQL_DATABASE -H $$POSTGRESQL_HOST -P $${POSTGRESQL_PORT:-5432} -s migrations up \
+		&& echo "migrations: ok"
+.PHONY: init-docker
+
 run-watch: init ## Run TS build, watch modified files and run application
 	npm run serve:watch
 .PHONY: run-watch
