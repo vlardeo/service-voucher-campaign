@@ -8,6 +8,10 @@ const campaignService = {
     return pgCampaignRepository.create(input);
   },
 
+  findById: async (id: string) => {
+    return pgCampaignRepository.findById(id);
+  },
+
   list: async (input?: ListCampaignsQuery) => {
     return pgCampaignRepository.list(input);
   },

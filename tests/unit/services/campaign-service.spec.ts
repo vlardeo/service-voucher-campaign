@@ -70,4 +70,13 @@ describe('@services/campaign-service', () => {
       });
     });
   });
+
+  describe('findById()', () => {
+    it('should call campaign repository to get campaign', async () => {
+      const campaign = aCampaign({}).buildMock();
+      (aCampaignRepository.findById as jest.Mock).mockResolvedValueOnce(campaign);
+      await campaignService.findById(campaign.id);
+      expect(aCampaignRepository.findById).toHaveBeenCalledWith(campaign.id);
+    });
+  });
 });
