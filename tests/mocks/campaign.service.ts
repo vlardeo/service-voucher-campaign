@@ -6,6 +6,7 @@ const aCampaignService = {
   create: jest.fn(async () => ({} as Promise<Campaign>)),
   list: jest.fn(async () => ({} as Promise<Page<Campaign>>)),
   delete: jest.fn(async () => ({} as Promise<DeleteCampaignResponse>)),
+  findById: jest.fn(async () => ({} as Promise<Campaign | null>)),
 };
 
 export default aCampaignService;
