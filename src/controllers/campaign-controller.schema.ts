@@ -22,7 +22,7 @@ const ListCampaignSchema = z.object({
     .strict(),
 });
 
-const DeleteCampaignSchema = z.object({
+const CampaignIdParamSchema = z.object({
   params: z
     .object({
       campaignId: z.string().uuid(),
@@ -30,4 +30,4 @@ const DeleteCampaignSchema = z.object({
     .strict(),
 });
 
-export { CreateCampaignSchema, ListCampaignSchema, DeleteCampaignSchema };
+export { CreateCampaignSchema, ListCampaignSchema, CampaignIdParamSchema };
