@@ -8,7 +8,7 @@ jest.mock('@/repositories/voucher.repository', () => aVoucherRepository);
 
 import voucherService from '@/services/voucher.service';
 import { generateUuid } from '@tests/uuid';
-import { ResourceNotFoundError, ValidationError } from '@/common/errors';
+import { ResourceNotFoundError } from '@/common/errors';
 import { aCampaign } from '@tests/builders/campaign.builder';
 import { aVoucher } from '@tests/builders/voucher.builder';
 
@@ -18,16 +18,6 @@ describe('@services/voucher-service', () => {
   });
 
   describe('createBatch()', () => {
-    describe('when batch voucher creation amount bigger than max allowed amount', () => {
-      it('throws ValidationError', async () => {
-        const CAMPAIGN_ID = generateUuid();
-        const AMOUNT = 1000;
-
-        await expect(voucherService.createBatch(CAMPAIGN_ID, AMOUNT)).rejects.toThrow(ValidationError);
-        expect(aVoucherRepository.createBatch).not.toHaveBeenCalled();
-      });
-    });
-
     describe("when voucher campaign doesn't exist", () => {
       it('throws ResourceNotFoundError', async () => {
         const CAMPAIGN_ID = generateUuid();

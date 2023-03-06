@@ -1,17 +1,11 @@
-import { ResourceNotFoundError, ValidationError } from '@/common/errors';
+import { ResourceNotFoundError } from '@/common/errors';
 import type { ListVouchersQuery } from '@/interfaces/repositories/voucher-repository.port';
 import pgCampaignRepository from '@/repositories/campaign.repository';
 import pgVoucherRepository from '@/repositories/voucher.repository';
 import { generateSetOfUniqDiscountCodes } from '@/utils/generate-discount-code';
 
-export const MAX_VOUCHER_BATCH_CREATION_AMOUNT = 100;
-
 const voucherService = {
   createBatch: async (campaignId: string, amount: number) => {
-    if (amount > MAX_VOUCHER_BATCH_CREATION_AMOUNT) {
-      throw new ValidationError(`Can't generate more than ${MAX_VOUCHER_BATCH_CREATION_AMOUNT} vouchers at a time`);
-    }
-
     const campaign = await pgCampaignRepository.findById(campaignId);
 
     if (!campaign) {

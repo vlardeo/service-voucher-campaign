@@ -1,6 +1,5 @@
 import z from 'zod';
 import { CampaignCurrency } from '@/interfaces/domain/campaign.types';
-import { MAX_VOUCHER_BATCH_CREATION_AMOUNT } from '@/services/voucher.service';
 
 const CreateCampaignSchema = z.object({
   body: z
@@ -26,7 +25,7 @@ const ListCampaignSchema = z.object({
 const BatchCreateVoucherSchema = z.object({
   query: z
     .object({
-      amount: z.coerce.number().min(1).max(MAX_VOUCHER_BATCH_CREATION_AMOUNT),
+      amount: z.coerce.number().min(1).max(100),
     })
     .strict(),
   params: z
