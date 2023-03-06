@@ -47,14 +47,14 @@ const voucherController = {
       const campaign = await campaignService.findById(campaignId);
 
       if (!campaign) {
-        res.status(404).send({ error: `Campaign ${campaignId} doesn't exist` });
+        return res.status(404).send({ error: `Campaign ${campaignId} doesn't exist` });
       }
 
       let page = 0;
       let { results } = await voucherService.listVouchersPerCampaign({ campaignId, page, pageSize: EXPORT_CSV_PAGE_SIZE });
 
       if (!results.length) {
-        res.status(404).send({ error: `Vouchers for campaign ${campaignId} don't exist` });
+        return res.status(404).send({ error: `Vouchers for campaign ${campaignId} don't exist` });
       }
 
       let csv = '';
