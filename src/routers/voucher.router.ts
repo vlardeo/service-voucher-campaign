@@ -8,6 +8,8 @@ export default function voucherRouter() {
 
   router.get('/vouchers', validate(ListVouchersPerCampaignSchema), voucherController.listVouchersPerCampaign);
 
+  router.get('/vouchers/download/csv', voucherController.downloadVouchersAsCsv);
+
   router.post('/vouchers/batch', validate(BatchCreateVoucherSchema), voucherController.voucherBatchCreate);
 
   return router;
