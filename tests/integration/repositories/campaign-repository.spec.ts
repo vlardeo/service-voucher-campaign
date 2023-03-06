@@ -2,7 +2,7 @@ import pool from '@/drivers/postgresql';
 import flush from '@tests/flush';
 import { CampaignCurrency, CreateCampaignDto } from '@/interfaces/domain/campaign.types';
 import pgCampaignRepository from '@/repositories/campaign.repository';
-import { generateUuid } from '@/utils/uuid';
+import { generateUuid } from '@tests/uuid';
 import { aCampaign } from '@tests/builders/campaign.builder';
 import { aVoucher } from '@tests/builders/voucher.builder';
 import pgVoucherRepository from '@/repositories/voucher.repository';

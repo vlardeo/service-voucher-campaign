@@ -5,7 +5,7 @@ import server from '@/server';
 import { CampaignCurrency } from '@/interfaces/domain/campaign.types';
 import pgCampaignRepository from '@/repositories/campaign.repository';
 import { aCampaign } from '@tests/builders/campaign.builder';
-import { generateUuid } from '@/utils/uuid';
+import { generateUuid } from '@tests/uuid';
 import pgVoucherRepository from '@/repositories/voucher.repository';
 import { aVoucher } from '@tests/builders/voucher.builder';
 

@@ -1,26 +1,27 @@
 import express from 'express';
 import campaignController from '@/controllers/campaign.controller';
 import validate from '@/middlewares/schema-validator';
-import {
-  CreateCampaignSchema,
-  ListCampaignSchema,
-  BatchCreateVoucherSchema,
-  ListVouchersPerCampaignSchema,
-  DeleteCampaignSchema,
-} from '@/controllers/campaign-controller.schema';
+import { CreateCampaignSchema, ListCampaignSchema, CampaignIdParamSchema } from '@/controllers/campaign-controller.schema';
+import voucherRouter from '@/routers/voucher.router';
 
 export default function campaignRouter() {
-  const router = express.Router();
+  const router = express.Router({ mergeParams: true });
 
-  router.get('/campaigns', validate(ListCampaignSchema), campaignController.list);
+  router.get('/', validate(ListCampaignSchema), campaignController.list);
 
-  router.get('/campaigns/:campaignId/vouchers', validate(ListVouchersPerCampaignSchema), campaignController.listVouchersPerCampaign);
+  router.post('/', validate(CreateCampaignSchema), campaignController.create);
 
-  router.post('/campaigns', validate(CreateCampaignSchema), campaignController.create);
+  router.use('/:campaignId', validate(CampaignIdParamSchema), nestedCampaignRouter());
 
-  router.post('/campaigns/:campaignId/vouchers/batch', validate(BatchCreateVoucherSchema), campaignController.voucherBatchCreate);
+  return router;
+}
 
-  router.delete('/campaigns/:campaignId', validate(DeleteCampaignSchema), campaignController.delete);
+function nestedCampaignRouter() {
+  const router = express.Router({ mergeParams: true });
+
+  router.delete('/', campaignController.delete);
+
+  router.use('/', voucherRouter());
 
   return router;
 }
