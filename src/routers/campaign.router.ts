@@ -12,15 +12,15 @@ import {
 export default function campaignRouter() {
   const router = express.Router();
 
-  router.get('/campaigns', validate(ListCampaignSchema), campaignController.list);
+  router.get('/', validate(ListCampaignSchema), campaignController.list);
 
-  router.get('/campaigns/:campaignId/vouchers', validate(ListVouchersPerCampaignSchema), campaignController.listVouchersPerCampaign);
+  router.get('/:campaignId/vouchers', validate(ListVouchersPerCampaignSchema), campaignController.listVouchersPerCampaign);
 
-  router.post('/campaigns', validate(CreateCampaignSchema), campaignController.create);
+  router.post('/', validate(CreateCampaignSchema), campaignController.create);
 
-  router.post('/campaigns/:campaignId/vouchers/batch', validate(BatchCreateVoucherSchema), campaignController.voucherBatchCreate);
+  router.post('/:campaignId/vouchers/batch', validate(BatchCreateVoucherSchema), campaignController.voucherBatchCreate);
 
-  router.delete('/campaigns/:campaignId', validate(DeleteCampaignSchema), campaignController.delete);
+  router.delete('/:campaignId', validate(DeleteCampaignSchema), campaignController.delete);
 
   return router;
 }
