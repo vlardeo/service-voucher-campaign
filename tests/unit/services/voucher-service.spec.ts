@@ -7,7 +7,7 @@ jest.mock('@/repositories/campaign.repository', () => aCampaignRepository);
 jest.mock('@/repositories/voucher.repository', () => aVoucherRepository);
 
 import voucherService from '@/services/voucher.service';
-import { generateUuid } from '@/utils/uuid';
+import { generateUuid } from '@tests/uuid';
 import { ResourceNotFoundError, ValidationError } from '@/common/errors';
 import { aCampaign } from '@tests/builders/campaign.builder';
 import { aVoucher } from '@tests/builders/voucher.builder';

@@ -3,7 +3,7 @@ jest.mock('@/repositories/campaign.repository', () => aCampaignRepository);
 
 import campaignService from '@/services/campaign.service';
 import { aCampaign } from '@tests/builders/campaign.builder';
-import { generateUuid } from '@/utils/uuid';
+import { generateUuid } from '@tests/uuid';
 import { ResourceNotFoundError } from '@/common/errors';
 
 describe('@services/campaign-service', () => {

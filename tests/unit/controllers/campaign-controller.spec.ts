@@ -12,7 +12,7 @@ import campaignController, {
 } from '@/controllers/campaign.controller';
 import { aCampaign } from '@tests/builders/campaign.builder';
 import { mockNext, mockResponse } from '@tests/mocks/express-api';
-import { generateUuid } from '@/utils/uuid';
+import { generateUuid } from '@tests/uuid';
 import { aVoucher } from '@tests/builders/voucher.builder';
 
 describe('@controllers/campaign-controller', () => {

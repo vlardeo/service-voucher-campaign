@@ -1,7 +1,7 @@
 import { Campaign, CampaignCurrency } from '@/interfaces/domain/campaign.types';
 import type { BuilderInterface } from '@tests/builders/builder.interface';
 import pool from '@/drivers/postgresql';
-import { generateUuid } from '@/utils/uuid';
+import { generateUuid } from '@tests/uuid';
 import { objectKeysToCamelCase } from '@/utils/case-convert';
 
 interface CampaignBuilderInterface {

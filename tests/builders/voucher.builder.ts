@@ -1,6 +1,6 @@
 import type { BuilderInterface } from '@tests/builders/builder.interface';
 import pool from '@/drivers/postgresql';
-import { generateUuid } from '@/utils/uuid';
+import { generateUuid } from '@tests/uuid';
 import { objectKeysToCamelCase } from '@/utils/case-convert';
 import type { Voucher } from '@/interfaces/domain/voucher.types';
 import { generateDiscountCode } from '@/utils/generate-discount-code';
