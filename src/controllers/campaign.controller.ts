@@ -53,10 +53,6 @@ const campaignController = {
       const { campaignId } = req.params;
       const { amount } = req.query;
 
-      if (isNaN(+amount)) {
-        return res.status(400).send({ error: 'Property amount should be number' });
-      }
-
       const response = await voucherService.createBatch(campaignId, +amount);
 
       res.status(201).json(response);

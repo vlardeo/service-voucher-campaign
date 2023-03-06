@@ -115,18 +115,6 @@ describe('@controllers/campaign-controller', () => {
       req = {} as VoucherBatchCreateRequest;
     });
 
-    describe('when request query amount is not numeric string', () => {
-      it('should send response with status code 400', async () => {
-        const CAMPAIGN_ID = generateUuid();
-        req.params = { campaignId: CAMPAIGN_ID };
-        req.query = { amount: 'hello' };
-
-        await campaignController.voucherBatchCreate(req, mockResponse, mockNext);
-        expect(mockResponse.status).toHaveBeenCalledWith(400);
-        expect(mockResponse.send).toHaveBeenCalledTimes(1);
-      });
-    });
-
     describe('when request is valid', () => {
       it('should send response with status code 201 and number of created vouchers', async () => {
         const CAMPAIGN_ID = generateUuid();
