@@ -3,7 +3,7 @@ import z from 'zod';
 const BatchCreateVoucherSchema = z.object({
   query: z
     .object({
-      amount: z.coerce.number().min(1).max(100),
+      amount: z.coerce.number().min(1).max(500),
     })
     .strict(),
 });
