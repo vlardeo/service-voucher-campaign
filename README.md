@@ -8,7 +8,7 @@ Backend server to manage campaigns and vouchers.
   - [Configuration to run and test service locally](#configuration-to-run-and-test-service-locally)
     - [How to run service](#how-to-run-service)
     - [How to test service](#how-to-test-service)
-  - [Run service in docker](#run-service-in-docker)
+  - [Run and test service in docker](#run-and-test-service-in-docker)
 
 ## Installation and configuration
 
@@ -28,15 +28,21 @@ make deps
 
 #### How to run service
 
-1. Run this command to create `.env` file (or create it manually):
+1. Make sure that you have PostgreSQL running locally or in docker-compose. You can use this command to create PostgreSQL container:
+
+```
+docker-compose up --build db
+```
+
+2. Run this command to create `.env` file (or create it manually):
 
 ```
 cp .env.tpl .env
 ```
 
-2. Update `.env` file with environment variables (server port, db connection)
+3. Update `.env` file with environment variables (server port, db connection), if needed.
 
-3. Run this command to up migrations, create build and run service:
+4. Run this command to up migrations, create build and run service:
 
 ```
 make run
@@ -44,28 +50,40 @@ make run
 
 #### How to test service
 
-1. Run this command to create `.env.test` file (or create it manually):
+1. Make sure that you have PostgreSQL running locally or in docker-compose. You can use this command to create PostgreSQL container:
+
+```
+docker-compose up --build db
+```
+
+2. Run this command to create `.env.test` file (or create it manually):
 
 ```
 cp .env.tpl .env.test
 ```
 
-2. Update `.env.test` file with environment variables (server port, db connection)
+3. Update `.env.test` file with environment variables (server port, db connection), , if needed.
 
-3. Run this command to up migrations and test service:
+4. Run this command to up migrations and test service:
 
 ```
 make test
 ```
 
-### Run service in docker
+### Run and test service in docker
 
-Be assure that service and db ports are not used by other processes on your machine.
+Before the next steps, be assure that service and db ports are not used by other processes on your machine.
 
-Run:
+- To run:
 
 ```
-docker-compose up --build
+docker-compose docker-compose.yml up --build
+```
+
+- To test:
+
+```
+docker-compose docker-compose.test.yml up --build
 ```
 
 ## Technology stack
