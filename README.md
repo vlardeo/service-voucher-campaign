@@ -8,7 +8,7 @@ Backend server to manage campaigns and vouchers.
   - [Configuration to run and test service locally](#configuration-to-run-and-test-service-locally)
     - [How to run service](#how-to-run-service)
     - [How to test service](#how-to-test-service)
-  - [Run and test service in docker](#run-and-test-service-in-docker)
+  - [Run service in docker](#run-service-in-docker)
 
 ## Installation and configuration
 
@@ -70,20 +70,14 @@ cp .env.tpl .env.test
 make test
 ```
 
-### Run and test service in docker
+### Run service in docker
 
-Before the next steps, be assure that service and db ports are not used by other processes on your machine.
+Be assure that service and db ports are not used by other processes on your machine.
 
-- To run:
-
-```
-docker-compose docker-compose.yml up --build
-```
-
-- To test:
+To run:
 
 ```
-docker-compose docker-compose.test.yml up --build
+docker-compose up --build
 ```
 
 ## Technology stack
