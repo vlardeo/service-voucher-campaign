@@ -9,7 +9,8 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       SERVER_PORT: 3000
       POSTGRESQL_HOST: db
@@ -28,6 +29,11 @@ services:
       POSTGRES_DB: service_voucher_campaign
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d service_voucher_campaign -U root"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   data: {}
