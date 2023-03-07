@@ -28,15 +28,21 @@ make deps
 
 #### How to run service
 
-1. Run this command to create `.env` file (or create it manually):
+1. Make sure that you have PostgreSQL running locally or in docker-compose. You can use this command to create PostgreSQL container:
+
+```
+docker-compose docker-compose.yml up db --build
+```
+
+2. Run this command to create `.env` file (or create it manually):
 
 ```
 cp .env.tpl .env
 ```
 
-2. Update `.env` file with environment variables (server port, db connection)
+3. Update `.env` file with environment variables (server port, db connection), if needed.
 
-3. Run this command to up migrations, create build and run service:
+4. Run this command to up migrations, create build and run service:
 
 ```
 make run
@@ -44,15 +50,21 @@ make run
 
 #### How to test service
 
-1. Run this command to create `.env.test` file (or create it manually):
+1. Make sure that you have PostgreSQL running locally or in docker-compose. You can use this command to create PostgreSQL container:
+
+```
+docker-compose docker-compose.yml up db --build
+```
+
+2. Run this command to create `.env.test` file (or create it manually):
 
 ```
 cp .env.tpl .env.test
 ```
 
-2. Update `.env.test` file with environment variables (server port, db connection)
+3. Update `.env.test` file with environment variables (server port, db connection), , if needed.
 
-3. Run this command to up migrations and test service:
+4. Run this command to up migrations and test service:
 
 ```
 make test
